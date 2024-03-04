@@ -2,16 +2,12 @@ package com.artur.VideoProcessor.service;
 
 import com.artur.VideoProcessor.config.MinioConfig;
 import io.minio.*;
-import io.minio.errors.*;
 import io.minio.messages.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 

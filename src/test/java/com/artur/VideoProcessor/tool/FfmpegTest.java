@@ -9,8 +9,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FfmpegTest extends MediaProcessorApplicationTest {
     @Autowired

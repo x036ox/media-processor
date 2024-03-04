@@ -1,8 +1,6 @@
 package com.artur.VideoProcessor.tool;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;

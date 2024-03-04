@@ -1,10 +1,8 @@
 package com.artur.VideoProcessor.eventhandler;
 
-import com.artur.VideoProcessor.service.KafkaManager;
 import com.artur.VideoProcessor.service.MinioService;
 import com.artur.VideoProcessor.utils.AppConstants;
 import com.artur.VideoProcessor.utils.ImageUtils;
-import jakarta.annotation.PostConstruct;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,13 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.Acknowledgment;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
-import java.time.Instant;
 
 @Component
 public class ThumbnailEventHandler {

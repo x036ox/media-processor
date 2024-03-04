@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("dev")
 @EmbeddedKafka

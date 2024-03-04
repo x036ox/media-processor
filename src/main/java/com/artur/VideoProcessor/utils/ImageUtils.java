@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Base64;
 
 public class ImageUtils {
     private static final Logger logger = LoggerFactory.getLogger(ImageUtils.class);
