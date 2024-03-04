@@ -1,0 +1,7 @@
+spring:
+  kafka:
+    bootstrap-servers: "http://localhost:9092"
+
+
+minio:
+  url: http://localhost:9000

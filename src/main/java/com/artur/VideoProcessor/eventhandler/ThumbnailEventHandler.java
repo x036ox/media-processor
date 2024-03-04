@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -31,8 +32,10 @@ public class ThumbnailEventHandler {
     @KafkaListener(
             id = "video-processor.thumbnail_consumer",
             topics = AppConstants.THUMBNAIL_INPUT_TOPIC,
+            topicPartitions = {@TopicPartition(topic = AppConstants.THUMBNAIL_INPUT_TOPIC, partitions = {"0", "1", "2", "3", "4"})},
             groupId = "video-processor.thumbnail:consumer",
-            containerFactory = "filenameListenerFactory"
+            containerFactory = "filenameListenerFactory",
+            concurrency = "5"
     )
     public void consumeEvent(ConsumerRecord<String, String> record){
        kafkaTemplate.send(AppConstants.THUMBNAIL_OUTPUT_TOPIC, record.key(), process(record.value()));
@@ -54,7 +57,7 @@ public class ThumbnailEventHandler {
             logger.error("Cannot upload object: " + e);
             return false;
         }
-        logger.info(STR."Thumbnail \{filename} successfully processed");
+        logger.info("Thumbnail [" + filename + "] successfully processed");
         return true;
     }
 }

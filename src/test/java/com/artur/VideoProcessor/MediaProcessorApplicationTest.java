@@ -1,25 +1,28 @@
 package com.artur.VideoProcessor;
 
 import com.artur.VideoProcessor.utils.ImageUtils;
+import io.minio.MinioClient;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-@SpringBootTest(classes = VideoProcessorApplication.class)
-public class VideoProcessorApplicationTest {
+@ActiveProfiles("dev")
+@EmbeddedKafka
+@SpringBootTest(classes = MediaProcessorApplication.class)
+public class MediaProcessorApplicationTest {
     public static final String TEST_VIDEO_FILE = "src/test/files/Video.mp4";
     public static final String TEST_IMAGE_FILE = "src/test/files/Image.jpg";
+
+    @MockBean
+    MinioClient minioClient;
 
     @Test
     public void imageConverterTest() throws IOException {

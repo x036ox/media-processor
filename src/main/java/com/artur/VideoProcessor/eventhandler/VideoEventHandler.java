@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -36,8 +37,10 @@ public class VideoEventHandler {
 
     @KafkaListener(
             topics = AppConstants.VIDEO_INPUT_TOPIC,
+            topicPartitions = {@TopicPartition(topic = AppConstants.VIDEO_INPUT_TOPIC, partitions = {"0", "1", "2", "3", "4"})},
             groupId = "video-processor.video:consumer",
-            containerFactory = "filenameListenerFactory"
+            containerFactory = "filenameListenerFactory",
+            concurrency = "5"
     )
     public void consumeVideoEvent(ConsumerRecord<String, String> record){
         kafkaTemplate.send(AppConstants.VIDEO_OUTPUT_TOPIC, record.key(), process(record.value()));
@@ -48,16 +51,13 @@ public class VideoEventHandler {
         File tempDir = null;
         try {
             InputStream inputStream;
-            File file;
-            byte[] video;
             try {
-                file = minioService.download(filename);
+                inputStream = new ByteArrayInputStream(minioService.getObject(filename).readAllBytes());
             } catch (Exception e) {
                 logger.error("Cannot download object: " + e);
                 return false;
             }
 
-            inputStream = new FileInputStream(file);
             try (inputStream){
                 tempDir = Files.createTempDirectory("tmp-ffmpeg").toFile();
                 Path index = Path.of(tempDir + "/" + "index.mp4");
@@ -70,12 +70,10 @@ public class VideoEventHandler {
 
             String prefix = filename.substring(0, filename.lastIndexOf("/"));
             upload(tempDir, prefix);
-         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } finally {
+         } finally {
             FileSystemUtils.deleteRecursively(tempDir);
         }
-        logger.info(STR."Video \{filename} successfully processed");
+        logger.info("Video [" + filename + "] successfully processed");
         return true;
     }
 

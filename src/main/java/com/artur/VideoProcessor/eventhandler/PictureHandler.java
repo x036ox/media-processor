@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
@@ -26,8 +27,10 @@ public class PictureHandler {
 
     @KafkaListener(
             topics = AppConstants.USER_PICTURE_INPUT_TOPIC,
+            topicPartitions = {@TopicPartition(topic = AppConstants.USER_PICTURE_INPUT_TOPIC, partitions = {"0", "1", "2", "3", "4"})},
             groupId = "video-processor.user-picture:consumer",
-            containerFactory = "filenameListenerFactory"
+            containerFactory = "filenameListenerFactory",
+            concurrency = "5"
     )
     public void consumeVideoEvent(ConsumerRecord<String, String> record){
         kafkaTemplate.send(AppConstants.USER_PICTURE_OUTPUT_TOPIC,record.key(),  process(record.value()));
@@ -49,7 +52,7 @@ public class PictureHandler {
             logger.error("Cannot upload object: " + e);
             return false;
         }
-        logger.info(STR."User picture \{filename} successfully processed");
+        logger.info("User picture [" + filename + "] successfully processed");
         return true;
     }
 }
