@@ -1,13 +1,13 @@
 minio:
   bucket:
     store: yout-back
-  url: http://minio:9000
-  access-key: ${MINIO_ACCESS:artur}
+  url: http://${MINIO_HOST:localhost}:9000
+  access-key: ${MINIO_ACCESS:admin}
   secret-key: ${MINIO_SECRET:adminadmin}
 
 spring:
   kafka:
-    bootstrap-servers: "http://kafka:9092"
+    bootstrap-servers: http://${KAFKA_HOST:localhost}:9093
 logging:
   level:
     com:
