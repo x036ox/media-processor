@@ -9,10 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.artur</groupId>
-	<artifactId>MediaProcessor</artifactId>
+	<artifactId>media-processor</artifactId>
 	<version>0.1</version>
-	<name>MediaProcessor</name>
-	<description>Minio storage service</description>
+	<name>media-processor</name>
 	<properties>
 		<java.version>21</java.version>
 	</properties>

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -20,18 +21,16 @@ public class PictureHandler {
 
     @Autowired
     MinioService minioService;
-    @Autowired
-    KafkaTemplate<String, Boolean> kafkaTemplate;
 
     @KafkaListener(
             topics = AppConstants.USER_PICTURE_INPUT_TOPIC,
             topicPartitions = {@TopicPartition(topic = AppConstants.USER_PICTURE_INPUT_TOPIC, partitions = {"0", "1", "2", "3", "4"})},
             groupId = "video-processor.user-picture:consumer",
-            containerFactory = "filenameListenerFactory",
             concurrency = "5"
     )
-    public void consumeVideoEvent(ConsumerRecord<String, String> record){
-        kafkaTemplate.send(AppConstants.USER_PICTURE_OUTPUT_TOPIC,record.key(),  process(record.value()));
+    @SendTo(AppConstants.USER_PICTURE_OUTPUT_TOPIC)
+    public boolean consumeVideoEvent(ConsumerRecord<String, String> record){
+        return process(record.value());
     }
 
     private boolean process(String filename){

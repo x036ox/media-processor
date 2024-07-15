@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("dev")
 @EmbeddedKafka
+@DirtiesContext
 @SpringBootTest(classes = MediaProcessorApplication.class)
 public class MediaProcessorApplicationTest {
     public static final String TEST_VIDEO_FILE = "src/test/files/Video.mp4";
