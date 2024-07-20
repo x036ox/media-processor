@@ -1,4 +1,4 @@
-minio:
+object-storage:
   url: http://minio:9000
 
 spring:

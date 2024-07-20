@@ -1,6 +1,6 @@
 package com.artur.VideoProcessor.eventhandler;
 
-import com.artur.VideoProcessor.service.MinioService;
+import com.artur.objectstorage.service.ObjectStorageService;
 import com.artur.VideoProcessor.utils.AppConstants;
 import com.artur.VideoProcessor.utils.ImageUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 @Component
@@ -20,7 +20,7 @@ public class PictureHandler {
     private static final Logger logger = LoggerFactory.getLogger(PictureHandler.class);
 
     @Autowired
-    MinioService minioService;
+    ObjectStorageService objectStorageService;
 
     @KafkaListener(
             topics = AppConstants.USER_PICTURE_INPUT_TOPIC,
@@ -36,7 +36,7 @@ public class PictureHandler {
     private boolean process(String filename){
         logger.trace("Started processing user picture: " + filename);
         byte[] pictureBytes;
-        try (InputStream pictureInputStream = minioService.getObject(filename)){
+        try (InputStream pictureInputStream = objectStorageService.getObject(filename)){
             pictureBytes = ImageUtils.compressUserPicture(pictureInputStream);
         } catch (Exception e) {
             logger.error("Cannot process picture: " + e);
@@ -44,7 +44,7 @@ public class PictureHandler {
         }
 
         try {
-            minioService.putObject(pictureBytes, filename);
+            objectStorageService.putObject(new ByteArrayInputStream(pictureBytes), filename);
         } catch (Exception e){
             logger.error("Cannot upload object: " + e);
             return false;

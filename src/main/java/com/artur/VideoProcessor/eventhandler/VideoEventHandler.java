@@ -1,6 +1,6 @@
 package com.artur.VideoProcessor.eventhandler;
 
-import com.artur.VideoProcessor.service.MinioService;
+import com.artur.objectstorage.service.ObjectStorageService;
 import com.artur.VideoProcessor.tool.Ffmpeg;
 import com.artur.VideoProcessor.utils.AppConstants;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -27,7 +27,7 @@ public class VideoEventHandler {
     private static final Logger logger = LoggerFactory.getLogger(VideoEventHandler.class);
 
     @Autowired
-    MinioService minioService;
+    ObjectStorageService objectStorageService;
     @Autowired
     Ffmpeg ffmpeg;
 
@@ -48,7 +48,7 @@ public class VideoEventHandler {
         try {
             InputStream inputStream;
             try {
-                inputStream = new ByteArrayInputStream(minioService.getObject(filename).readAllBytes());
+                inputStream = new ByteArrayInputStream(objectStorageService.getObject(filename).readAllBytes());
             } catch (Exception e) {
                 logger.error("Cannot download object: " + e);
                 return false;
@@ -81,12 +81,12 @@ public class VideoEventHandler {
         for(File file : Objects.requireNonNull(tempDir.listFiles())){
             try {
                 String objectFilename = prefix + file.getName();
-                minioService.uploadObject(file, objectFilename);
+                objectStorageService.uploadObject(file, objectFilename);
                 uploadedObjects.add(objectFilename);
             } catch (Exception e) {
                 for(String object: uploadedObjects){
                     try {
-                        minioService.removeObject(object);
+                        objectStorageService.removeObject(object);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
