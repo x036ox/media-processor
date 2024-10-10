@@ -30,13 +30,13 @@ public class Ffmpeg {
 
     private String[] buildFfmpegCommand(File video){
         //result string is going to look like:
-        // ffmpeg -i input.mp4 -c:a aac -b:a 128k -c:v libx264 -b:v 1500k -hls_time 10 -hls_list_size 0 -hls_segment_filename "output_%03d.ts" output.m3u8
+        // ffmpeg -i input.mp4 -c copy -hls_time 10 -hls_list_size 0 -hls_segment_filename "output_%03d.ts" output.m3u8
 
         String pathWithoutExtension = StringUtils.stripFilenameExtension(video.getAbsolutePath());
         return new String[]{
                 "ffmpeg", "-i",
                 video.getAbsolutePath(),
-                "-c:a", "aac", "-b:a", "128k", "-c:v", "libx264", "-b:v", "1500k", "-hls_time",
+                "-c", "copy", "-hls_time",
                 Integer.toString(10),
                 "-hls_list_size", "0", "-hls_segment_filename",
                 pathWithoutExtension + "%03d.ts",
