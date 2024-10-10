@@ -44,6 +44,7 @@ public class VideoEventHandler {
 
     private boolean process(String filename){
         logger.trace("Started processing video: " + filename);
+        long start = System.currentTimeMillis();
         File tempDir = null;
         try {
             InputStream inputStream;
@@ -69,7 +70,7 @@ public class VideoEventHandler {
          } finally {
             FileSystemUtils.deleteRecursively(tempDir);
         }
-        logger.info("Video [" + filename + "] successfully processed");
+        logger.info("Video [{}] successfully processed in {} {}", filename, ((System.currentTimeMillis() - start) / 1000), "seconds");
         return true;
     }
 

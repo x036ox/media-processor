@@ -35,6 +35,7 @@ public class PictureHandler {
 
     private boolean process(String filename){
         logger.trace("Started processing user picture: " + filename);
+        long start = System.currentTimeMillis();
         byte[] pictureBytes;
         try (InputStream pictureInputStream = objectStorageService.getObject(filename)){
             pictureBytes = ImageUtils.compressUserPicture(pictureInputStream);
@@ -49,7 +50,7 @@ public class PictureHandler {
             logger.error("Cannot upload object: " + e);
             return false;
         }
-        logger.info("User picture [" + filename + "] successfully processed");
+        logger.info("User picture [{}] successfully processed in {}ms", filename, (System.currentTimeMillis() - start));
         return true;
     }
 }

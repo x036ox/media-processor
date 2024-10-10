@@ -36,6 +36,7 @@ public class ThumbnailEventHandler {
 
     private boolean process(String filename){
         logger.trace("Started processing thumbnail: " + filename);
+        long start = System.currentTimeMillis();
         byte[] pictureBytes;
         try (InputStream pictureInputStream = objectStorageService.getObject(filename)){
             pictureBytes = ImageUtils.compressVideoThumbnail(pictureInputStream);
@@ -50,7 +51,7 @@ public class ThumbnailEventHandler {
             logger.error("Cannot upload object: " + e);
             return false;
         }
-        logger.info("Thumbnail [" + filename + "] successfully processed");
+        logger.info("Thumbnail [{}] successfully processed in {}ms", filename, (System.currentTimeMillis() - start));
         return true;
     }
 }
